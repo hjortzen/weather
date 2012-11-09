@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+    <cron>
+        <url>/celsiusfetcher</url>
+        <description>Fetches new data from Celsius</description>
+        <schedule>every 5 minutes</schedule>
+    </cron>
+</cronentries>
