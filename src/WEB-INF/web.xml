@@ -11,9 +11,19 @@
     <servlet-class>com.hjortzen.celsius.jobs.CelsiusDataFetcher</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>listing</servlet-name>
+    <servlet-class>com.hjortzen.celsius.servlet.WeatherListingServlet</servlet-class>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>celsiusfetcher</servlet-name>
     <url-pattern>/celsiusfetcher</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>listing</servlet-name>
+    <url-pattern>/table</url-pattern>
   </servlet-mapping>
 
   <!--

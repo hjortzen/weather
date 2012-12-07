@@ -54,10 +54,9 @@ public class WeatherObservationDao {
     }
 
     public List<WeatherObservation> getAll() {
-        /*PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+        PersistenceManager pm = PMF.getInstance().getPersistenceManager();
         try {
             Query q = pm.newQuery(WeatherObservation.class);
-
             try {
                 List<WeatherObservation> results = (List<WeatherObservation>) q.execute();
                 if (!results.isEmpty()) {
@@ -65,6 +64,7 @@ public class WeatherObservationDao {
                 } else {
                     logger.info("No objects found");
                 }
+                return results;
             } finally {
                 q.closeAll();
             }
@@ -73,7 +73,7 @@ public class WeatherObservationDao {
             e.printStackTrace();
         } finally {
             pm.close();
-        }   */
+        }
         return null;
     }
 }
