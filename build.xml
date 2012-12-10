@@ -90,12 +90,18 @@
         <fileset dir="${appengine.sdk}/lib/shared">
           <include name="*.jar"/>
         </fileset>
+        <fileset dir="./lib">
+          <include name="gson-2.2.2.jar"/>
+        </fileset>
       </classpath>
     </javac>
     <copy todir="${war.dir}/WEB-INF/lib"
           flatten="true">
       <fileset dir="${appengine.sdk}/lib/user">
         <include name="**/*.jar" />
+      </fileset>
+      <fileset dir="./lib">
+        <include name="gson-2.2.2.jar"/>
       </fileset>
     </copy>
   </target>

@@ -14,7 +14,8 @@ import java.util.Date;
  */
 @PersistenceCapable
 public class WeatherObservation {
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    public static final String datePattern = "yyyy-MM-dd HH:mm";
+    private static final SimpleDateFormat formatter = new SimpleDateFormat(datePattern);
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
