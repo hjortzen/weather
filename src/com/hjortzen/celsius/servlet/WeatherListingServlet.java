@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -22,28 +25,48 @@ import java.util.logging.Logger;
 public class WeatherListingServlet extends HttpServlet {
     private Logger logger = Logger.getLogger("WeatherListingServlet");
     private WeatherObservationDao weatherDao = new WeatherObservationDao();
+    private SimpleDateFormat formatter = new SimpleDateFormat(WeatherObservation.datePattern);
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String type = req.getParameter("type");
         String fromDate = req.getParameter("from");
         String toDate = req.getParameter("to");
 
+        //Get the data within boxed limits
+
+        List<WeatherObservation> observations = getData(fromDate, toDate);
+
         if (type == null || type.equals("json")) {
             JsonResponse response = new JsonResponse();
-            response.data = weatherDao.getAll();
+            response.data = observations;
 
             String json = getGson().toJson(response);
             resp.getWriter().println(json);
         } else {
             //logger.info("Running weather listing servlet!");
-            List<WeatherObservation> observations = weatherDao.getAll();
             req.setAttribute("observations", observations);
-
             req.getRequestDispatcher("/jsp/listAvailableData.jsp").forward(req, resp);
             //resp.sendRedirect("/jsp/listAvailableData.jsp");
         }
+    }
 
-
+    private List<WeatherObservation> getData(String fromDateAsString, String toDateAsString) {
+        if (fromDateAsString == null) {
+            return weatherDao.getAll();
+        } else {
+            try {
+                Date fromDate = formatter.parse(fromDateAsString);
+                if (toDateAsString != null) {
+                    Date toDate = formatter.parse(toDateAsString);
+                    return weatherDao.getBetween(fromDate, toDate);
+                } else {
+                    return weatherDao.getFrom(fromDate);
+                }
+            } catch(ParseException pe) {
+                logger.info("Date couldn't be parsed " + pe.getMessage());
+            }
+        }
+        return null;
     }
 
     private Gson getGson() {

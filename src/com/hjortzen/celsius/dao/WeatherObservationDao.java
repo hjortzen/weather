@@ -19,8 +19,7 @@ public class WeatherObservationDao {
         try {
             pm.makePersistent(dto);
         } catch(Exception e) {
-            logger.severe("Unexpected result when adding a new weather observation" + e.getMessage());
-            e.printStackTrace();
+            logUnexpectedError(e);
         } finally {
             pm.close();
         }
@@ -35,18 +34,13 @@ public class WeatherObservationDao {
 
             try {
                 List<WeatherObservation> results = (List<WeatherObservation>) q.execute(observationTime);
-                if (!results.isEmpty()) {
-                    logger.info("Found " + results.size() + " objects");
-                } else {
-                    logger.info("No objects found");
-                }
+                logResults(results);
                 return results;
             } finally {
                 q.closeAll();
             }
         } catch(Exception e) {
-            logger.severe("Unexpected result querying JDO " + e.getMessage());
-            e.printStackTrace();
+            logUnexpectedError(e);
         } finally {
             pm.close();
         }
@@ -59,21 +53,73 @@ public class WeatherObservationDao {
             Query q = pm.newQuery(WeatherObservation.class);
             try {
                 List<WeatherObservation> results = (List<WeatherObservation>) q.execute();
-                if (!results.isEmpty()) {
-                    logger.info("Found " + results.size() + " objects");
-                } else {
-                    logger.info("No objects found");
-                }
+                logResults(results);
                 return results;
             } finally {
                 q.closeAll();
             }
         } catch(Exception e) {
-            logger.severe("Unexpected result querying JDO " + e.getMessage());
-            e.printStackTrace();
+            logUnexpectedError(e);
         } finally {
             pm.close();
         }
         return null;
+    }
+
+    public List<WeatherObservation> getBetween(Date fromDate, Date toDate) {
+        PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+        try {
+            Query q = pm.newQuery(WeatherObservation.class);
+            q.setFilter("observationTimestamp >= fromDate && observationTimestamp <= toDate");
+            q.declareParameters("java.util.Date fromDate, java.util.Date toDate");
+            q.setOrdering("observationTimestamp desc");
+            try {
+                List<WeatherObservation> results = (List<WeatherObservation>) q.execute(fromDate, toDate);
+                logResults(results);
+                return results;
+            } finally {
+                q.closeAll();
+            }
+        } catch(Exception e) {
+            logUnexpectedError(e);
+        } finally {
+            pm.close();
+        }
+        return null;
+    }
+
+    public List<WeatherObservation> getFrom(Date fromDate) {
+        PersistenceManager pm = PMF.getInstance().getPersistenceManager();
+        try {
+            Query q = pm.newQuery(WeatherObservation.class);
+            q.setFilter("observationTimestamp > fromDate");
+            q.declareParameters("java.util.Date fromDate");
+            q.setOrdering("observationTimestamp desc");
+            try {
+                List<WeatherObservation> results = (List<WeatherObservation>) q.execute(fromDate);
+                logResults(results);
+                return results;
+            } finally {
+                q.closeAll();
+            }
+        } catch(Exception e) {
+            logUnexpectedError(e);
+        } finally {
+            pm.close();
+        }
+        return null;
+    }
+
+    private void logUnexpectedError(Exception e) {
+        logger.severe("Unexpected result querying JDO " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    private void logResults(List<WeatherObservation> results) {
+        if (!results.isEmpty()) {
+            logger.info("Found " + results.size() + " objects");
+        } else {
+            logger.info("No objects found");
+        }
     }
 }
