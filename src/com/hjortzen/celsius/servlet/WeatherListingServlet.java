@@ -41,6 +41,8 @@ public class WeatherListingServlet extends HttpServlet {
             response.data = observations;
 
             String json = getGson().toJson(response);
+            setCORSHeaders(resp, req);
+            resp.setContentType("application/json");
             resp.getWriter().println(json);
         } else {
             //logger.info("Running weather listing servlet!");
@@ -94,5 +96,18 @@ public class WeatherListingServlet extends HttpServlet {
     private class JsonResponse {
         List<WeatherObservation> data;
         String version = "0.1";
+    }
+
+    private void setCORSHeaders(HttpServletResponse response, HttpServletRequest request) {
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.setHeader("Access-Control-Allow-Methods", "GET,POST");
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // pre-flight request processing
+        resp.setHeader("Access-Control-Allow-Origin", req.getHeader("origin"));
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST");
+        resp.setHeader("Access-Control-Allow-Headers", "content-type");
     }
 }
