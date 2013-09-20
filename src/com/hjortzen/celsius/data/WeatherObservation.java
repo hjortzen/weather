@@ -2,10 +2,7 @@ package com.hjortzen.celsius.data;
 
 import com.google.appengine.api.datastore.Key;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
+import javax.jdo.annotations.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -25,20 +22,26 @@ public class WeatherObservation {
     @Persistent
     private float temperature;
     @Persistent
+    @Extension(vendorName="datanucleus", key="gae.unindexed", value="true")
     private float tempMax12h;
     @Persistent
+    @Extension(vendorName="datanucleus", key="gae.unindexed", value="true")
     private float tempMin12h;
     @Persistent
     private float windSpeed;
     @Persistent
     private float windDirection;
     @Persistent
+    @Extension(vendorName="datanucleus", key="gae.unindexed", value="true")
     private float airPressure;
     @Persistent
+    @Extension(vendorName="datanucleus", key="gae.unindexed", value="true")
     private float relativeHumidity;
     @Persistent
+    @Extension(vendorName="datanucleus", key="gae.unindexed", value="true")
     private float precipation1h;
     @Persistent
+    @Extension(vendorName="datanucleus", key="gae.unindexed", value="true")
     private float precipation24h;
     @Persistent
     private float snowDepth;
